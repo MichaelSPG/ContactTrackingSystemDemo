@@ -1,0 +1,84 @@
+﻿@using Blazored.FluentValidation
+@using ContactTrackingSystem.Client.Utils.Validator;
+@using ContactTrackingSystem.Shared.Model;
+<div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-xl-12">
+            <div class="card-body p-5">
+                <RadzenTemplateForm TItem="Candidate" Data="Model" class="form-horizontal" Submit="OnValidSubmit">
+                    <FluentValidationValidator  />
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="form-group">
+                                <RadzenText TextStyle=TextStyle.Subtitle1 class="form-label" for="FirstName">
+                                    First name
+                                </RadzenText>
+
+                                <RadzenMask Mask="***************" MaxLength=30 CharacterPattern="^[A-Za-z ]+$" class="form-control" Name="FirstName" Placeholder="eg. John" @bind-Value="Model.FirstName" />
+                                <RadzenRequiredValidator Component="FirstName" Text="First Name is required" Popup=true Style="position: relative" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <RadzenText TextStyle=TextStyle.Subtitle1 class="form-label" for="LastName">
+                                    Last name
+                                </RadzenText>
+
+                                <RadzenMask Mask="***************" MaxLength=30 CharacterPattern="^[A-Za-z ]+$" class="form-control" Name="LastName" Placeholder="eg. Doe" @bind-Value="Model.LastName" />
+                                <RadzenRequiredValidator Component="LastName" Text="Last Name is required" Popup=true Style="position: relative" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <RadzenText TextStyle=TextStyle.Subtitle1 class="form-label" Text="Email" />
+                                <RadzenTextBox style="display: block" Name="Email" @bind-Value=@Model.Email Class="w-100" Placeholder="somebody@email.com" />
+                                <RadzenRequiredValidator Component="Email" Text="E-mail is required" Popup=true Style="position: relative" />
+                                <EmailValidator Component="Email" Text="E-mail not valid" Popup=true Style="position: relative" />
+                                <UniqueEmailValidator EntityId="@Model.Id" Component="Email" Text="E-mail is already taken" Popup=true Style="position: relative" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 p-0">
+                        <div class="form-group">
+                            <RadzenText TextStyle=TextStyle.Subtitle1 class="form-label" for="PhoneNumber">
+                                Phone number
+                            </RadzenText>
+                            <RadzenMask id="PhoneNumber" style="display: block" class="w-100" Mask=@NumberPattern Name="PhoneNumber" CharacterPattern="[0-9]" Placeholder=@NumberFormat @bind-Value=@Model.PhoneNumber />
+                            <RadzenRequiredValidator Component="PhoneNumber" Text="Phone Number is required" Popup=true Style="position: relative" />
+                            <PhoneValidator Component="PhoneNumber" Text="Phone Number is invalid" Popup=true Style="position: relative" />
+                            <UniquePhoneValidator EntityId="@Model.Id" Component="PhoneNumber" Text="Phone Number is already taken" Popup=true Style="position: relative" />
+                            
+                        </div>
+                    </div>
+                    <div class="col-md-12 p-0">
+                        <div class="form-group">
+                            <RadzenText TextStyle=TextStyle.Subtitle1 class="form-label" for="ZipCode">
+                                Zip Code
+                            </RadzenText>
+                            <RadzenMask id="ZipCode" style="display: block" class="w-100" Mask="*****" Name="ZipCode" CharacterPattern="[0-9]" Placeholder="12345" @bind-Value=@Model.ZipCode />
+                            <RadzenRequiredValidator Component="ZipCode" Text="Zip Code is required" Popup=true Style="position: relative" />
+                            <ResidentialZipCodeValidator Component="ZipCode" Text="Zip Code is invalid" Popup=true Style="position: relative" />
+                        </div>
+                    </div>
+                    @foreach (var item in Errors)
+                    {
+                        <span class="rz-message rz-messages-error">* @((MarkupString)item)</span>
+                    }
+                    <p>&nbsp;</p>
+                    <div class="form-group">
+                        <RadzenButton type="submit"
+                                      class="btn btn-primary w-100">
+                            @(IsNew ? "Add contact" : "Edit contact")
+                        </RadzenButton>
+                    </div>
+                </RadzenTemplateForm>
+
+            </div>
+        </div>
+    </div>
+</div>

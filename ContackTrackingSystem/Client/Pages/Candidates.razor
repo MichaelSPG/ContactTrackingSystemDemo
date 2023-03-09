@@ -1,0 +1,61 @@
+﻿@page "/Candidates"
+@using ContactTrackingSystem.Shared;
+@using ContactTrackingSystem.Shared.Model;
+
+<PageTitle>Candidates</PageTitle>
+
+<div class=".res-el-4 w-100">
+    <div class="pt-4 bg-white p-2">
+        <div class="d-flex justify-content-between " style="margin-left:10px;">
+            <h2 class="text-dark" style="margin-left:10px;"><strong>Candidates tracking</strong></h2>
+            <RadzenButton ButtonStyle="ButtonStyle.Primary" Click="async () => await OpenCreateEditCandidate(null)"><i class="fa-solid fa-plus ml-2"></i> <span>New Candidate</span></RadzenButton>
+        </div>
+
+    </div>
+    <div class="rz-p-4 rz-text-align-center">
+        <div class="text-muted">Which datagrid do you want to use?</div>
+        <RadzenRadioButtonList Value=@UseCustomDataGrid TValue="bool" Change=@(args => {UseCustomDataGrid = args; StateHasChanged();}) class="mb-1">
+            <Items>
+                <RadzenRadioButtonListItem Text="Use third party (Radzen)" Value="false" />
+                <RadzenRadioButtonListItem Text="Use custom" Value="true" />
+            </Items>
+        </RadzenRadioButtonList>
+    </div>
+    <div class="res-el-4 ">
+
+        @if (UseCustomDataGrid)
+        {
+            <CustomDataGrid @ref=CustomDataGrid TItem="Candidate" Items="@CandidateList" ItemsPerPage=5 OnEditItemRequest="OnEditCandidate" OnRemoveItemRequest="OnRemoveCandidate"></CustomDataGrid>
+        }
+        else
+        {
+            <RadzenDataGrid @ref="dataGrid" SelectionMode="DataGridSelectionMode.Single"
+                        AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false"
+                        FilterMode="FilterMode.SimpleWithMenu" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true" Data="@CandidateList" TItem="Candidate">
+                <Columns>
+
+                    <RadzenDataGridColumn TItem="Candidate" Property="FirstName" Title="First Name">
+                        <Template Context="Candidate">
+
+                            <div class="d-flex align-items-center"><i class="fa-solid fa-circle-user fa-2x" style="color:var(--rz-primary);"></i><span class="m-2"> @Candidate.FirstName</span></div>
+                        </Template>
+                    </RadzenDataGridColumn>
+
+                    <RadzenDataGridColumn TItem="Candidate" Property="LastName" Title="LastName" />
+                    <RadzenDataGridColumn TItem="Candidate" Property="Email" Title="E-mail" />
+                    <RadzenDataGridColumn TItem="Candidate" Property="PhoneNumber" Title="Phone Number" />
+                    <RadzenDataGridColumn TItem="Candidate" Property="ZipCode" Title="Zip Code" />
+                    <RadzenDataGridColumn Reorderable=false Filterable=false TItem="Candidate" Title="Actions">
+                        <Template Context="Candidate">
+
+                            <div class="d-flex align-items-center">
+                                <a href="javascript:void(0);" @onclick="async ()=> await OnEditCandidate(Candidate)" class="text-success"><i class="fa-solid fa-pen-to-square p-2 me-1"></i></a>
+                                <a href="javascript:void(0);" @onclick="async ()=> await OnRemoveCandidate(Candidate)" class="text-danger"><i class="fa-solid fa-trash p-2 me-1"></i></a>
+                            </div>
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        }
+    </div>
+</div>

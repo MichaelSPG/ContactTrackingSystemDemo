@@ -1,2 +1,1 @@
-# ContactTrackingSystemDemo
-App Demo
+this project was create with .net 6
