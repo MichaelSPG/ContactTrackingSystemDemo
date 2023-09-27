@@ -1,1 +1,1 @@
-this project was create with .net 6
+this project was created with .net 6
